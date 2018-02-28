@@ -1,4 +1,4 @@
-package generated;
+package tests;
 
 import generated.regex.regexParser;
 import org.junit.After;
