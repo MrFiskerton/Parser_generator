@@ -19,7 +19,7 @@ public class Main {
         if (!file.getParentFile().mkdirs()) {
             System.out.println("Can't make dir.");
         }
-        
+
         ParserGenerator parserGenerator = new ParserGenerator(file);
         try {
             parserGenerator.generate(new File(baseDir + args[0]));

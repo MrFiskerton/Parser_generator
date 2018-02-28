@@ -1,5 +1,5 @@
 @header {
-package regex;
+package generated.regex;
 import generator.Tree;
 }
 

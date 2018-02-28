@@ -1,5 +1,4 @@
-package regex;
-import generator.Tree;
+package generated.regex;
 public enum Token {
 	
 OPEN_SQUARE, OR, OPEN_BRACKET, EPS, CLOSE_BRACKET, CLOSE_SQUARE, ASTERISK, CHAR, EOF

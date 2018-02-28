@@ -84,7 +84,7 @@ public class ParserGenerator {
         res.println("\t\tString s=\"\";");
         res.println("\t\ttry {");
         res.println("\t\t\tInputStream is = new ByteArrayInputStream(s.getBytes(\"UTF-8\"));");
-        res.println("\t\t\t" + (start.getReturnType().equals("void") ? "" : start.getReturnType() + " result = ") + "(new "+ name +"Parser" +"()).parse(is" + (start.getDeclAttrs(true).isEmpty() ? "" : ", " + start.getDeclAttrs(false)) + ");");
+        res.println("\t\t\t" + (start.getReturnType().equals("void") ? "" : start.getReturnType() + " result = ") + "(new " + name + "Parser" + "()).parse(is" + (start.getDeclAttrs(true).isEmpty() ? "" : ", " + start.getDeclAttrs(false)) + ");");
         res.println("\t\t} catch(Exception e) {");
         res.println("\t\t\tSystem.err.println(e.getMessage());");
         res.println("\t\t}");
@@ -190,7 +190,7 @@ public class ParserGenerator {
         res.println("\t\tlex.nextToken();");
 
         res.print("\t\t");
-        if (!start.getReturnType().equals("void")) res.print(start.getReturnType() + " result = " );
+        if (!start.getReturnType().equals("void")) res.print(start.getReturnType() + " result = ");
         res.println(start.getName() + "(" + start.getDeclAttrs(false) + ");");
 
         res.println("\t\tif (!lex.curToken().toString().equals(\"EOF\")) throw new AssertionError(\"Last token not END, was\" + lex.curToken().toString()); ");

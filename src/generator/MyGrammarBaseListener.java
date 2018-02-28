@@ -22,7 +22,7 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
 
     @Override
     public void enterMembersLabel(GrammarParser.MembersLabelContext ctx) {
-        if (ctx.CODE() != null)  pg.members = ParserGenerator.makeCode(ctx.CODE());
+        if (ctx.CODE() != null) pg.members = ParserGenerator.makeCode(ctx.CODE());
     }
 
     @Override

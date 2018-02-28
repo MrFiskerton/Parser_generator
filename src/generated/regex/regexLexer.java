@@ -1,5 +1,4 @@
-package regex;
-import generator.Tree;
+package generated.regex;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
