@@ -17,7 +17,6 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
     @Override
     public void enterHeaderLabel(GrammarParser.HeaderLabelContext ctx) {
         if (ctx.CODE() != null) pg.header = ParserGenerator.makeCode(ctx.CODE());
-
     }
 
     @Override
@@ -85,9 +84,7 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
             if (nonterminalContext.CODE() != null) {
                 el.setJavaCode(ParserGenerator.makeCode(nonterminalContext.CODE()));
             }
-
             currentNode.add(el);
         }
     }
-
 }
