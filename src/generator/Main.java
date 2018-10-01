@@ -8,16 +8,20 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) {
-        String baseDir = "./src/";
+        final String baseDir = "./src/";
         if (args.length < 1) {
             System.out.println("Please provide grammar name in format *.in");
             return;
         }
 
         String[] parts = args[0].split("[.]");
-        File file = new File(baseDir + "generated/" + parts[0]);
-        if (!file.getParentFile().mkdirs()) {
-            System.out.println("Can't make dir.");
+        File file = new File(baseDir + "mygenerated/" + parts[0]);
+        if (!file.getParentFile().exists()) {
+            if (file.getParentFile().mkdirs()) {
+                System.out.println("Directory " + file.getParentFile() + " is created.");
+            } else {
+                System.out.println("Failed to create directory! " + file.getParentFile());
+            }
         }
 
         ParserGenerator parserGenerator = new ParserGenerator(file);

@@ -1,6 +1,6 @@
 package tests;
 
-import generated.regex.regexParser;
+import mygenerated.regex.regexParser;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,13 +19,12 @@ public class regexParserTest {
 
     @BeforeClass
     public static void initParser() {
-
         p = new regexParser();
     }
 
     @After
     public void afterEachTest() {
-        System.out.println();
+        //System.out.println();
     }
 
     @Test
@@ -44,7 +43,7 @@ public class regexParserTest {
     }
 
     @Test
-    public void testStar() {
+    public void testAsterisk() {
         successTest("a*b");
     }
 

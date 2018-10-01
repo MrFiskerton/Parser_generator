@@ -235,8 +235,7 @@ public class ParserGenerator {
 
                         for (Node node : el.getNodes()) {
                             String name = node.getName();
-                            System.out.println(nonTerm + ": " + name + " - " + suitableProds);
-
+                            //System.out.println(nonTerm + ": " + name + " - " + suitableProds);
 
                             if (terminals.containsKey(node.getName())) {
                                 res.println("\t\t\t\tif (lex.curToken().toString().equals(\"" + name + "\")) {");

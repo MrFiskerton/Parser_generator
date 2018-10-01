@@ -1,5 +1,5 @@
 @header {
-package generated.regex;
+package mygenerated.regex;
 import generator.Tree;
 }
 
@@ -8,35 +8,47 @@ import generator.Tree;
 }
 
 start [returns  Tree]
-    : e {return new Tree("S", e.get(0));}
-    | {return new Tree("S");};
-e [returns  Tree]
-    : t e1 {return new Tree("E", t.get(0), e1.get(0));};
-e1 [returns  Tree]
-    : OR t e1 {return new Tree("E'", t.get(0), e1.get(0));}
-    | {return new Tree("E'");};
-t [returns  Tree]
-    : f t1 {return new Tree("T", f.get(0), t1.get(0));};
-t1 [returns  Tree]
-    : f t1 {return new Tree("T'", f.get(0), t1.get(0));}
-    | {return new Tree("T'");};
-f [returns  Tree]
-    : a f1 {return new Tree("F", a.get(0), f1.get(0));};
-f1 [returns  Tree]
-    : ASTERISK f1 {return new Tree("F'", new Tree(ASTERISK.get(0)), f1.get(0));}
-    | {return new Tree("F'");};
+    : re {return new Tree("Start", re.get(0));}
+    | {return new Tree("Start");}
+    ;
 
-a [returns  Tree]
-    : CHAR {return new Tree("A", new Tree(CHAR.get(0)));}
-    | OPEN_BRACKET e CLOSE_BRACKET {return new Tree("A", new Tree(OPEN_BRACKET.get(0)), e.get(0), new Tree(CLOSE_BRACKET.get(0)));}
-    | OPEN_SQUARE chars CLOSE_SQUARE { return new Tree("A", new Tree(OPEN_SQUARE.get(0)), chars.get(0), new Tree(CLOSE_SQUARE.get(0))); };
+re [returns  Tree]
+    : concat re_p {return new Tree("RE", concat.get(0), re_p.get(0));};
+
+re_p [returns  Tree]
+    : OR concat re_p {return new Tree("RE'", concat.get(0), re_p.get(0));}
+    | {return new Tree("RE'");}
+    ;
+
+concat [returns  Tree]
+    : kleene concat_p {return new Tree("concat", kleene.get(0), concat_p.get(0));};
+
+concat_p [returns  Tree]
+    : kleene concat_p {return new Tree("concat'", kleene.get(0), concat_p.get(0));}
+    | {return new Tree("concat'");}
+    ;
+
+kleene [returns  Tree]
+    : n kleene_p {return new Tree("kleene", n.get(0), kleene_p.get(0));};
+
+kleene_p [returns  Tree]
+    : ASTERISK kleene_p {return new Tree("kleene'", new Tree(ASTERISK.get(0)), kleene_p.get(0));}
+    | {return new Tree("kleene'");}
+    ;
+
+n [returns  Tree]
+    : CHAR {return new Tree("n", new Tree(CHAR.get(0)));}
+    | OPEN_BRACKET re CLOSE_BRACKET {return new Tree("n", new Tree(OPEN_BRACKET.get(0)), re.get(0), new Tree(CLOSE_BRACKET.get(0)));}
+    | OPEN_SQUARE chars CLOSE_SQUARE { return new Tree("n", new Tree(OPEN_SQUARE.get(0)), chars.get(0), new Tree(CLOSE_SQUARE.get(0))); }
+    ;
 
 chars [returns Tree]
-    : CHAR charrs { return new Tree("chars", new Tree(CHAR.get(0)), charrs.get(0)); };
+    : CHAR chars_p { return new Tree("chars", new Tree(CHAR.get(0)), chars_p.get(0)); };
 
-charrs [returns Tree]
+chars_p [returns Tree]
     : chars { return chars.get(0); }
-    | {return new Tree("charrs");};
+    | {return new Tree("chars_p");}
+    ;
 
 OR: '|';
 OPEN_BRACKET : '(' ;
