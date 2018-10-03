@@ -1,0 +1,385 @@
+@header {
+package mygenerated.functional;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
+}
+
+@members {
+private Map<String, Map<List<String>, String>> conds = new HashMap<>(); //condtions
+private Map<String, String> functions = new LinkedHashMap<>(); //function signatures
+private Map<String, Integer> variables = new HashMap<>(); //amount of variables
+
+private final String tab = "	";
+private List<String> scope = new ArrayList<>();
+
+private void addElement(String key, List<String> args, String value) {
+	conds.get(key).put(args, value);
+}
+
+private void addFunction(String key, List<String> args) {
+	StringBuilder res = new StringBuilder();
+	String type = args.get(args.size() - 1);
+	if ((type.equals("bool")) || (type.equals("int"))) res.append(type);
+	else res.append("void *");
+
+	res.append(" ").append(key).append("(");
+
+	for (int i = 0; i < args.size() - 1; i++) {
+		type = args.get(i);
+		if ((type.equals("bool")) || (type.equals("int"))) {
+			res.append(type).append(" ").append((char) ('a' + i)).append(", ");
+		} else {
+			//it will be function pointer, we constructed it before
+			res.append(type.replace("###", "" + (char) ('a' + i))).append(", ");
+		}
+	}
+
+	if (args.size() > 1) res.setLength(res.length() - 2);
+	res.append(")");
+
+	functions.put(key, res.toString());
+	variables.put(key, args.size() - 1);
+	conds.put(key, new LinkedHashMap<>());
+}
+}
+
+start
+    : file
+    | {}
+	;
+
+file
+	: form ffile;
+
+ffile
+	: file
+	|
+{
+StringBuilder res = new StringBuilder();
+
+for (Map.Entry<String, String> func : functions.entrySet()) {
+	String name = func.getKey();
+	res.append(func.getValue()).append(" {\n");
+
+	List<String> generatedCond = new ArrayList<>(), collectedBody = new ArrayList<>();
+	for (Map.Entry<List<String>, String> cond : conds.get(name).entrySet()) {
+		List<String> parts = cond.getKey();
+		String value = cond.getValue();
+		StringBuilder fullCond = new StringBuilder();
+
+		int argsCount = variables.get(name), count = 0;
+
+		for (int i = 0; i < argsCount; i++) {
+			String part = parts.get(i);
+			if (part.matches("-?\\d+(\\.\\d+)?") || part.equals("true") || part.equals("false")) {
+				count++;
+				fullCond.append("(").append((char) ('a' + i)).append(" == ").append(part).append(") and ");
+			}
+		}
+
+		if (parts.size() == argsCount + 1) fullCond.append("(").append(parts.get(argsCount)).append(")");
+		else if (count > 0) fullCond.setLength(fullCond.length() - 5);
+
+		generatedCond.add(fullCond.toString());
+		collectedBody.add(value);
+	}
+
+	for (int i = 0; i < generatedCond.size(); i++) {
+		boolean need = generatedCond.get(i).length() > 0;
+
+		if (need) res.append(tab);
+		if (i != 0 && need) res.append("else ");
+		if (need) res.append("if ").append(generatedCond.get(i)).append(" {\n").append(tab);
+
+		//maybe we need cast function pointers to void* here
+		res.append(tab).append("return ").append(collectedBody.get(i)).append(";\n");
+
+		if (need) res.append(tab).append("}\n");
+
+	}
+	res.append("}\n\n");
+	}
+
+System.out.println(res);
+return;
+}
+	;
+
+form
+	: function defOrExpr [{function.get(0)}]
+	;
+
+defOrExpr [String function]
+	: definition [{function}]
+	| expression [{function}]
+	;
+
+definition [String function]
+	: QUADRODOT typeDef { addFunction(function, typeDef.get(0)); return; }
+	;
+
+expression [String function]
+	: expressionLeft expressionRight
+	{
+List<String> conditions = expressionRight.get(0);
+List<String> values = expressionLeft.get(0);
+
+if (conditions.size() == 1) {
+	addElement(function, values, conditions.get(0));
+} else {
+	values.add(conditions.get(0));
+	addElement(function, values, conditions.get(1));
+}
+scope = new ArrayList<>();
+return;
+	}
+	| expressionRight
+	{
+List<String> conditions = expressionRight.get(0);
+List<String> values = new ArrayList<>();
+
+if (conditions.size() == 1) {
+	addElement(function, values, conditions.get(0));
+} else {
+	values.add(conditions.get(0));
+	addElement(function, values, conditions.get(1));
+}
+scope = new ArrayList<>();
+return;
+	}
+	;
+
+expressionLeft [returns List<String>]
+	: values { return values.get(0); }
+	;
+
+expressionRight [returns List<String>]
+	: HASHTAG condition { return condition; }
+	| BORDER condition HASHTAG condition { return condition; }
+	;
+
+condition [returns String]
+	: NOT condition { return "not " + condition.get(0); }
+	| equation { return equation.get(0); }
+	;
+
+
+equation [returns String]
+	: equationT equationEPrime { return equationT.get(0) + equationEPrime.get(0); }
+	;
+
+equationEPrime [returns String]
+	: OPS equationT equationEPrime { return " " + OPS.get(0) + " " + equationT.get(0) + equationEPrime.get(0); }
+	| { return ""; }
+	;
+
+equationT [returns String]
+	: equationF equationTPrime { return equationF.get(0) + equationTPrime.get(0); }
+	;
+
+equationTPrime [returns String]
+	: OPS2 equationF equationTPrime { return " " + OPS2.get(0) + " " + equationF.get(0) + equationTPrime.get(0); }
+	| EQUAL equationF equationTPrime { return " == " + equationF.get(0) + equationTPrime.get(0); }
+	| { return ""; }
+	;
+
+equationF [returns String]
+	: LPAREN equation RPAREN { return "(" + equation.get(0) + ")"; }
+	| primitive { return primitive.get(0); }
+	| variable  { return variable.get(0); }
+	| function LPAREN functionArgs RPAREN
+	{
+StringBuilder sb = new StringBuilder();
+sb.append(function.get(0));
+sb.append(functionArgs.get(0));
+return sb.toString();
+	}
+	;
+
+functionArgs [returns String]
+	: equation equationn
+	{
+StringBuilder sb = new StringBuilder();
+sb.append("(").append(equation.get(0)).append(", ");
+sb.append(equationn.get(0));
+sb.setLength(sb.length() - 2);
+sb.append(")");
+return sb.toString();
+	}
+	| { return "()";}
+	;
+
+equationn [returns String]
+	: COMMA equation { StringBuilder sb = new StringBuilder(); return sb.append(equation.get(0)).append(", ").toString(); }
+	| { return ""; }
+	;
+
+primitive [returns String]
+	: INT { return INT.get(0); }
+	| bool { return bool.get(0); }
+	;
+
+values [returns List<String>]
+	: value valuess
+	{
+List<String> args = new ArrayList<>();
+args.add(value.get(0));
+args.addAll(valuess.get(0));
+scope = args;
+return args;
+	}
+	;
+
+valuess [returns List<String>]
+	: values { return values.get(0); }
+	| { return new ArrayList<>(); }
+	;
+
+
+value [returns String]
+	: primitive { return primitive.get(0); }
+	| variable { return variable.get(0); }
+	;
+
+typeDef [returns List<String>]
+	: type typeDeff
+	{
+List<String> args = new ArrayList<>();
+args.add(type.get(0));
+args.addAll(typeDeff.get(0));
+return args;
+	}
+	;
+
+typeDeff [returns List<String>]
+	:  ARROW typeDef { return typeDef.get(0); }
+	| { return new ArrayList<>(); }
+	;
+
+type [returns String]
+	: INT {return "int"; }
+	| BOOL { return "bool"; }
+	| LPAREN typeDef RPAREN
+	{
+StringBuilder res = new StringBuilder();
+String type = (String) typeDef.get(0).get(typeDef.get(0).size() - 1);
+
+if ((type.equals("bool")) || (type.equals("int"))) res.append(type);
+else res.append("void *");
+
+res.append(" ").append("(*###) ").append("(");
+
+
+for (int i = 0; i < typeDef.get(0).size() - 1; i++) {
+	type = (String) typeDef.get(0).get(i);
+	if ((type.equals("bool")) || (type.equals("int"))) res.append(type).append(" ").append((char) ('a' + i)).append(", ");
+	else {
+		//it will be function pointer, we constructed it before
+		res.append(type.replace("###", "" + (char) ('a' + i))).append(", ");
+	}
+}
+
+if (typeDef.get(0).size() > 1) res.setLength(res.length() - 2);
+res.append(")");
+return res.toString();
+	}
+	;
+
+
+variable [returns String]
+	: IDENTIFIER
+	{
+int i = scope.indexOf(IDENTIFIER.get(0));
+String txt = "";
+if (i >= 0) txt = "" + (char) ('a' + i);
+else txt = IDENTIFIER.get(0);
+return txt;
+	}
+	;
+
+function [returns String]
+	: FUNC
+	{
+int i = scope.indexOf(FUNC.get(0));
+String txt = "";
+if (i >= 0) txt = "(*" + (char) ('a' + i) + ")";
+else txt = FUNC.get(0);
+return txt;
+	}
+	;
+
+
+bool [returns String]
+	: TRUE { return "true"; }
+	| FALSE { return "false"; }
+	;
+
+TRUE
+	: 'T'
+	;
+
+FALSE
+	: 'F'
+	;
+
+EQUAL
+    : '='
+    ;
+
+OPS
+	: '+' | '-' | '|' | '&';
+
+OPS2
+	: '*' | '/' | '%' | '<' | '>';
+
+HASHTAG
+	: '#'
+	;
+
+NOT
+    : '!'
+    ;
+
+INT
+    : 'I';
+
+BOOL
+    : 'L';
+
+QUADRODOT
+	: ':'
+	;
+
+ARROW
+	: '~'
+	;
+
+
+COMMA
+	: ','
+	;
+
+
+LPAREN
+	: '('
+	;
+
+RPAREN
+	: ')'
+	;
+
+BORDER
+	: '_'
+	;
+
+IDENTIFIER
+	: 'a' | 'b' | 'c' | 'd' | 'e' | 'x' | 'y' | 'z';
+
+FUNC
+	: 'A' | 'B' | 'C' |	'D' | 'E' | 'X' | 'Y' | 'Z';
+
+INT
+   : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' ;

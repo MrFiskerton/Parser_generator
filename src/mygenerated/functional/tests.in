@@ -1,0 +1,27 @@
+X : I ~ I
+X 0 # 1
+X b _ b > 0 # b * X(b - 1)
+
+B : I ~ L
+B d _ d = 0 # T
+B a # F
+
+D : I ~ I ~ L
+D 0 0 # T
+D d 0 # F
+D 0 a # F
+D c d # D(c - 1, d - 1)
+
+E : I ~ I
+E x # x + 1
+
+E : I ~ I ~ L
+E a b _ a < 2 # F
+E c d _ a = 2 # T
+E a d _ a % b = 0 # F
+E a b _ b < a / 2 # E(a, b + 1)
+E a b # T
+
+Y : I ~ I ~ I
+Y c d _ (c < 0 & d < 0) | c = 0 | d = 0 # c * d
+Y b z # b + z
