@@ -221,11 +221,6 @@ public class functionalLexer {
 			curString += (char) curChar;
 			nextChar();
 		}
-		else if ('#' == ((char) curChar)) {
-			curToken = Token.HASHTAG;
-			curString += (char) curChar;
-			nextChar();
-		}
 		else if ('~' == ((char) curChar)) {
 			curToken = Token.ARROW;
 			curString += (char) curChar;
@@ -233,6 +228,11 @@ public class functionalLexer {
 		}
 		else if ('_' == ((char) curChar)) {
 			curToken = Token.BORDER;
+			curString += (char) curChar;
+			nextChar();
+		}
+		else if ('#' == ((char) curChar)) {
+			curToken = Token.HASHTAG;
 			curString += (char) curChar;
 			nextChar();
 		}

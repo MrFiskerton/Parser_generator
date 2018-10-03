@@ -317,17 +317,10 @@ bool [returns String]
 	| FALSE { return "false"; }
 	;
 
-TRUE
-	: 'T'
-	;
+TRUE: 'T';
+FALSE: 'F';
 
-FALSE
-	: 'F'
-	;
-
-EQUAL
-    : '='
-    ;
+EQUAL: '=';
 
 OPS
 	: '+' | '-' | '|' | '&';
@@ -335,45 +328,20 @@ OPS
 OPS2
 	: '*' | '/' | '%' | '<' | '>';
 
-HASHTAG
-	: '#'
-	;
-
-NOT
-    : '!'
-    ;
-
-INT
-    : 'I';
-
-BOOL
-    : 'L';
-
-QUADRODOT
-	: ':'
-	;
-
-ARROW
-	: '~'
-	;
 
 
-COMMA
-	: ','
-	;
+NOT: '!';
 
+INT: 'I';
+BOOL: 'L';
 
-LPAREN
-	: '('
-	;
-
-RPAREN
-	: ')'
-	;
-
-BORDER
-	: '_'
-	;
+QUADRODOT: ':';
+ARROW: '~';
+COMMA: ',';
+LPAREN: '(';
+RPAREN: ')';
+BORDER: '_';
+HASHTAG: '#';
 
 IDENTIFIER
 	: 'a' | 'b' | 'c' | 'd' | 'e' | 'x' | 'y' | 'z';
