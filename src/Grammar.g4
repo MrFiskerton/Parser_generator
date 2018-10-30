@@ -1,7 +1,7 @@
 grammar Grammar;
 
-file
-    : header? members? myRule*;
+source_file
+    : header? members? grammar_rule+ EOF;
 
 header
     : '@header' CODE # headerLabel;
@@ -9,14 +9,18 @@ header
 members
     : '@members' CODE # membersLabel;
 
-myRule
-    : NON_TERM_NAME inherited? ('[returns ' synthesized ']')? ':' nonterminalProduction ('|' nonterminalProduction)* ';' # nonTerminalLabel
-    | TERM_NAME ':' terminalProduction ('|' terminalProduction)* ';' # terminalLabel;
+grammar_rule
+    :  nonterminal | terminal ;
+
+nonterminal
+    : NON_TERM_NAME inherited? ('[returns ' synthesized ']')? ':' nonterminalProduction ('|' nonterminalProduction)* ';'
+    # nonTerminalLabel;
+
+terminal
+    : TERM_NAME ':' terminalProduction ('|' terminalProduction)* ';'
+    # terminalLabel;
 
 inherited
-    : declAttrs;
-
-declAttrs
     : '[' arg (',' arg)* ']';
 
 callAttrs

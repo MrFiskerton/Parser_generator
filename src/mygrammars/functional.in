@@ -328,15 +328,13 @@ OPS
 OPS2
 	: '*' | '/' | '%' | '<' | '>';
 
-
-
 NOT: '!';
 
-INT: 'I';
-BOOL: 'L';
+INT: '/INT/';
+BOOL: '/BOOL/';
 
 QUADRODOT: ':';
-ARROW: '~';
+ARROW: '/~>/';
 COMMA: ',';
 LPAREN: '(';
 RPAREN: ')';

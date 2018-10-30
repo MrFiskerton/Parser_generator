@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
-public class NotGeneratedMain {
+public class FunctionalTestRun {
     public static void main(String[] args) throws IOException, ParseException {
         final String baseDir = "./src/";
 

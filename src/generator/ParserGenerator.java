@@ -9,7 +9,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -40,7 +43,7 @@ public class ParserGenerator {
         GrammarParser parser = new GrammarParser(tokens);
 
         GrammarBaseListener visitor = new MyGrammarBaseListener(this);
-        ParseTree tree = parser.file();
+        ParseTree tree = parser.source_file();
 
         new ParseTreeWalker().walk(visitor, tree);
 
@@ -81,7 +84,7 @@ public class ParserGenerator {
 
         res.println("public class Main {");
         res.println("\tpublic static void main(String[] args) throws IOException, ParseException {");
-        res.println("\t\tString s=\"\";");
+        res.println("\t\tString s = \"\";");
         res.println("\t\ttry {");
         res.println("\t\t\tInputStream is = new ByteArrayInputStream(s.getBytes(\"UTF-8\"));");
         res.println("\t\t\t" + (start.getReturnType().equals("void") ? "" : start.getReturnType() + " result = ") + "(new " + name + "Parser" + "()).parse(is" + (start.getDeclAttrs(true).isEmpty() ? "" : ", " + start.getDeclAttrs(false)) + ");");
@@ -143,22 +146,72 @@ public class ParserGenerator {
         res.println("\t\t\treturn;");
         res.println("\t\t}");
 
+        boolean use_regex = false;
+        StringBuilder regex_matching = new StringBuilder();
+        regex_matching.append("\t\twhile (true) {\n")
+                      .append("\t\t\tcurString += (char) curChar;\n");
+
         boolean first = true;
         for (String curStringTerminal : terminals.keySet()) {
             for (Element elementString : terminals.get(curStringTerminal).getElementList()) {
+                //System.out.println(elementString.get(0).getName());
+                if (elementString.get(0).getName().length() > 1 &&
+                    elementString.get(0).getName().charAt(0) == '/' &&
+                    elementString.get(0).getName().charAt(elementString.get(0).getName().length() - 1) == '/') {
+                    //System.out.println(elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1));
+                    use_regex = true;
+                    regex_matching.append(String.format(
+                            "\t\t\tif(curString.matches(\"%1$s\")) {\n" +
+                            "\t\t\t\tcurToken = Token.%2$s;\n" +
+                            "\t\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
+                            "\t\t\t\tnextChar();\n" +
+                            "\t\t\t\treturn;\n" +
+                            "\t\t\t}\n",
+                            elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1),
+                            curStringTerminal.toUpperCase()));
+                    continue;
+                }
+
                 res.println(String.format(
                         (first ? "\t\tif" : "\t\telse if") +
                                 " (\'%1$s\' == ((char) curChar)) {\n" +
                                 "\t\t\tcurToken = Token.%2$s;\n" +
                                 "\t\t\tcurString += (char) curChar;\n" +
                                 "\t\t\tnextChar();\n" +
+                                "\t\t\treturn;\n" +
                                 "\t\t}",
                         elementString.get(0).getName(), curStringTerminal.toUpperCase()
                 ));
                 first = false;
             }
         }
-        res.println("\t\telse throw new AssertionError(\"Illegal character \" + (char) curChar);");
+
+        regex_matching
+                .append("\n\t\t\tnextChar();\n")
+                .append("\t\t\twhile (isBlank(curChar)) nextChar();\n")
+                .append("\t\t\tif (curChar == -1) {\n")
+                .append("\t\t\t\tthrow new AssertionError(\"\\\"\" + curString + \"\\\" doesn't match regexp\");\n")
+                .append("\t\t\t}\n")
+                .append("\t\t}\n");
+
+
+        if (use_regex) res.print(regex_matching.toString());
+        /*while (true) {
+            curString += (char) curChar;
+            if(curString.matches("(zapple)| ([A-Z]*)")) {
+                curToken = Token.CHAR;
+                System.out.println("\"" + curString + "\" matched by ");
+                nextChar();
+                return;
+            }
+            nextChar();
+            while (isBlank(curChar)) nextChar();
+            if (curChar == -1) {
+                throw new AssertionError("\"" + curString + "\" doesn't match regexp");
+            }
+        }*/
+
+        if (!use_regex) res.println("\t\tthrow new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos);");
         res.println("\t}\n}");
         res.close();
     }
@@ -199,6 +252,7 @@ public class ParserGenerator {
 
         for (String nonTerm : nonTerminals.keySet()) {
             res.println("\tprivate " + getNonTerm(nonTerm).getReturnType() + " " + nonTerm + "(" + getNonTerm(nonTerm).getDeclAttrs(true) + ") throws ParseException, IOException {");
+            res.println("\t\tSystem.out.println(lex.curToken().toString() + \" \" + lex.curString());");
             res.println("\t\tswitch (lex.curToken()) {");
 
             Set<String> set = new HashSet<>(first.get(nonTerm));

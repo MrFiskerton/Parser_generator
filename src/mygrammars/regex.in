@@ -56,4 +56,4 @@ CLOSE_BRACKET : ')' ;
 OPEN_SQUARE : '[' ;
 CLOSE_SQUARE : ']' ;
 ASTERISK: '*' | '+';
-CHAR : 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+CHAR : '/[a-z]/';

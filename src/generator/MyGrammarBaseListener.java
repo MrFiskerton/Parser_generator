@@ -8,28 +8,28 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * Created by mrfiskerton on 25.01.2018.
  */
 public class MyGrammarBaseListener extends GrammarBaseListener {
-    private ParserGenerator pg;
+    private ParserGenerator pgenerator;
 
-    MyGrammarBaseListener(ParserGenerator pg) {
-        this.pg = pg;
+    MyGrammarBaseListener(ParserGenerator pgenerator) {
+        this.pgenerator = pgenerator;
     }
 
     @Override
-    public void enterHeaderLabel(GrammarParser.HeaderLabelContext ctx) {
-        if (ctx.CODE() != null) pg.header = ParserGenerator.makeCode(ctx.CODE());
+    public void enterHeaderLabel(GrammarParser.HeaderLabelContext context) {
+        if (context.CODE() != null) pgenerator.header = ParserGenerator.makeCode(context.CODE());
     }
 
     @Override
-    public void enterMembersLabel(GrammarParser.MembersLabelContext ctx) {
-        if (ctx.CODE() != null) pg.members = ParserGenerator.makeCode(ctx.CODE());
+    public void enterMembersLabel(GrammarParser.MembersLabelContext context) {
+        if (context.CODE() != null) pgenerator.members = ParserGenerator.makeCode(context.CODE());
     }
 
     @Override
-    public void enterTerminalLabel(GrammarParser.TerminalLabelContext ctx) {
-        String name = ctx.TERM_NAME().getText();
-        Node curNode = pg.getTerm(name);
+    public void enterTerminalLabel(GrammarParser.TerminalLabelContext context) {
+        String name = context.TERM_NAME().getText();
+        Node curNode = pgenerator.getTerm(name);
 
-        for (GrammarParser.TerminalProductionContext terminalContext : ctx.terminalProduction()) {
+        for (GrammarParser.TerminalProductionContext terminalContext : context.terminalProduction()) {
             Element el = new Element();
             String s = "";
             for (TerminalNode term : terminalContext.STRING()) {
@@ -42,30 +42,30 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
     }
 
     @Override
-    public void enterNonTerminalLabel(GrammarParser.NonTerminalLabelContext ctx) {
-        Node currentNode = pg.getNonTerm(ctx.NON_TERM_NAME().getText());
+    public void enterNonTerminalLabel(GrammarParser.NonTerminalLabelContext context) {
+        Node currentNode = pgenerator.getNonTerm(context.NON_TERM_NAME().getText());
 
-        if (ctx.synthesized() != null) {
-            if (ctx.synthesized().NON_TERM_NAME() != null) {
-                currentNode.setReturnType(ctx.synthesized().NON_TERM_NAME().getText());
-            } else if (ctx.synthesized().TERM_NAME() != null) {
-                currentNode.setReturnType(ctx.synthesized().TERM_NAME().getText());
-            } else if (ctx.synthesized().MIXED_CASE() != null) {
-                currentNode.setReturnType(ctx.synthesized().MIXED_CASE().getText());
+        if (context.synthesized() != null) {
+            if (context.synthesized().NON_TERM_NAME() != null) {
+                currentNode.setReturnType(context.synthesized().NON_TERM_NAME().getText());
+            } else if (context.synthesized().TERM_NAME() != null) {
+                currentNode.setReturnType(context.synthesized().TERM_NAME().getText());
+            } else if (context.synthesized().MIXED_CASE() != null) {
+                currentNode.setReturnType(context.synthesized().MIXED_CASE().getText());
             }
         }
 
-        if (ctx.inherited() != null) {
-            for (GrammarParser.ArgContext arg : ctx.inherited().declAttrs().arg()) {
+        if (context.inherited() != null) {
+            for (GrammarParser.ArgContext arg : context.inherited().arg()) {
                 currentNode.putDeclAttrs(arg.argName().getText(), arg.argType().getText());
             }
         }
 
-        for (GrammarParser.NonterminalProductionContext nonterminalContext : ctx.nonterminalProduction()) {
+        for (GrammarParser.NonterminalProductionContext nonterminalContext : context.nonterminalProduction()) {
             Element el = new Element();
 
             if (nonterminalContext.nonterminalVariant().isEmpty()) {
-                el.add(pg.getTerm("EPS"));
+                el.add(pgenerator.getTerm("EPS"));
             }
 
             for (GrammarParser.NonterminalVariantContext variantContext : nonterminalContext.nonterminalVariant()) {

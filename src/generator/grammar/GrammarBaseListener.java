@@ -16,13 +16,13 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFile(GrammarParser.FileContext ctx) { }
+	@Override public void enterSource_file(GrammarParser.Source_fileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFile(GrammarParser.FileContext ctx) { }
+	@Override public void exitSource_file(GrammarParser.Source_fileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -47,6 +47,18 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMembersLabel(GrammarParser.MembersLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGrammar_rule(GrammarParser.Grammar_ruleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGrammar_rule(GrammarParser.Grammar_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -83,18 +95,6 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInherited(GrammarParser.InheritedContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDeclAttrs(GrammarParser.DeclAttrsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclAttrs(GrammarParser.DeclAttrsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

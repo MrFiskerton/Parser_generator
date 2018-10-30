@@ -8,15 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface GrammarListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#file}.
+	 * Enter a parse tree produced by {@link GrammarParser#source_file}.
 	 * @param ctx the parse tree
 	 */
-	void enterFile(GrammarParser.FileContext ctx);
+	void enterSource_file(GrammarParser.Source_fileContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#file}.
+	 * Exit a parse tree produced by {@link GrammarParser#source_file}.
 	 * @param ctx the parse tree
 	 */
-	void exitFile(GrammarParser.FileContext ctx);
+	void exitSource_file(GrammarParser.Source_fileContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code headerLabel}
 	 * labeled alternative in {@link GrammarParser#header}.
@@ -42,26 +42,36 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitMembersLabel(GrammarParser.MembersLabelContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GrammarParser#grammar_rule}.
+	 * @param ctx the parse tree
+	 */
+	void enterGrammar_rule(GrammarParser.Grammar_ruleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#grammar_rule}.
+	 * @param ctx the parse tree
+	 */
+	void exitGrammar_rule(GrammarParser.Grammar_ruleContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code nonTerminalLabel}
-	 * labeled alternative in {@link GrammarParser#myRule}.
+	 * labeled alternative in {@link GrammarParser#nonterminal}.
 	 * @param ctx the parse tree
 	 */
 	void enterNonTerminalLabel(GrammarParser.NonTerminalLabelContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code nonTerminalLabel}
-	 * labeled alternative in {@link GrammarParser#myRule}.
+	 * labeled alternative in {@link GrammarParser#nonterminal}.
 	 * @param ctx the parse tree
 	 */
 	void exitNonTerminalLabel(GrammarParser.NonTerminalLabelContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code terminalLabel}
-	 * labeled alternative in {@link GrammarParser#myRule}.
+	 * labeled alternative in {@link GrammarParser#terminal}.
 	 * @param ctx the parse tree
 	 */
 	void enterTerminalLabel(GrammarParser.TerminalLabelContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code terminalLabel}
-	 * labeled alternative in {@link GrammarParser#myRule}.
+	 * labeled alternative in {@link GrammarParser#terminal}.
 	 * @param ctx the parse tree
 	 */
 	void exitTerminalLabel(GrammarParser.TerminalLabelContext ctx);
@@ -75,16 +85,6 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInherited(GrammarParser.InheritedContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#declAttrs}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclAttrs(GrammarParser.DeclAttrsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#declAttrs}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclAttrs(GrammarParser.DeclAttrsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#callAttrs}.
 	 * @param ctx the parse tree
