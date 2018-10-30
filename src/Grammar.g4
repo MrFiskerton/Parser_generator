@@ -1,58 +1,53 @@
 grammar Grammar;
 
-source_file
-    : header? members? grammar_rule+ EOF;
-
-header
-    : '@header' CODE # headerLabel;
-
-members
-    : '@members' CODE # membersLabel;
-
-grammar_rule
-    :  nonterminal | terminal ;
+source_file:
+    header? members? grammar_rule+ EOF;
+header:  '@header'  JAVA_CODE # headerLabel;
+members: '@members' JAVA_CODE # membersLabel;
+grammar_rule:
+    nonterminal | terminal ;
 
 nonterminal
-    : NON_TERM_NAME inherited? ('[returns ' synthesized ']')? ':' nonterminalProduction ('|' nonterminalProduction)* ';'
-    # nonTerminalLabel;
+    : NON_TERM_NAME inherited? synthesized? ':' nonterminalProd ('|' nonterminalProd)* ';' # nonTerminalLabel;
 
 terminal
-    : TERM_NAME ':' terminalProduction ('|' terminalProduction)* ';'
-    # terminalLabel;
+    : TERM_NAME ':' terminalProd ('|' terminalProd)* ';' # terminalLabel;
 
-inherited
-    : '[' arg (',' arg)* ']';
+inherited:   '[' argument (',' argument)* ']';
+synthesized: '[returns ' result ']';
 
-callAttrs
-    : '[' CODE (',' CODE)* ']';
+argument: arg_type arg_name;
 
-arg
-    : argType argName;
+arg_type: NON_TERM_NAME | TERM_NAME | JAVA_NAME;
+arg_name: NON_TERM_NAME | TERM_NAME | JAVA_NAME;
 
-argType
-    : NON_TERM_NAME | TERM_NAME | MIXED_CASE;
-
-argName
-    : NON_TERM_NAME | TERM_NAME | MIXED_CASE;
-
-synthesized
-    : NON_TERM_NAME ('<' (argType)? '>')?
-    | TERM_NAME ('<' (argType)? '>')?
-    | MIXED_CASE ('<' (argType)? '>')?
+result
+    : NON_TERM_NAME ('<' (arg_type)? '>')?
+    | TERM_NAME ('<' (arg_type)? '>')?
+    | JAVA_NAME ('<' (arg_type)? '>')?
     ;
 
-nonterminalVariant
-    : ((NON_TERM_NAME callAttrs?)| TERM_NAME);
+nonterminalProd:    (nonterminalVariant)* JAVA_CODE?;
+nonterminalVariant: ((NON_TERM_NAME callAttrs?)| TERM_NAME);
+callAttrs:          '[' JAVA_CODE (',' JAVA_CODE)* ']';
 
-nonterminalProduction
-    : (nonterminalVariant)* CODE?;
+terminalProd: SINGLE_QUOTE_STRING+;
 
-terminalProduction
-    : STRING+;
+NON_TERM_NAME : LOWERCASE_LETTER CHAR* ;
+TERM_NAME : UPPERCASE_LETTER CHAR* ;
 
-NON_TERM_NAME : [a-z] [a-zA-Z_0-9]* ;
-TERM_NAME : [A-Z] [A-Z_0-9]* ;
-MIXED_CASE : [A-Za-z] [a-z_A-Z0-9]* ;
-CODE : '{' (~[{}]+ CODE?)* '}' ;
-STRING : '\'' (~'\'' | '\\\'')* '\'' ;
+JAVA_CODE : '{' (~[{}]+ JAVA_CODE?)* '}' ;
+SINGLE_QUOTE_STRING : '\'' (~'\'' | '\\\'')* '\'' ;
+
+JAVA_NAME: LETTER CHAR*;
+
+fragment CHAR: DIGIT | LETTER | UNDERSCORE;
+fragment LETTER: UPPERCASE_LETTER | LOWERCASE_LETTER;
+fragment UPPERCASE_LETTER: [A-Z];
+fragment LOWERCASE_LETTER: [a-z];
+fragment UNDERSCORE: [_];
+fragment DIGIT: [0-9];
+
 WS : [ \t\r\n]+ -> skip ;
+BLOCK_COMMENT: '/*' .*? '*/' -> skip;
+COMMENT: '//' ~[\r\n]* -> skip;

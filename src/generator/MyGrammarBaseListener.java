@@ -16,12 +16,12 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
 
     @Override
     public void enterHeaderLabel(GrammarParser.HeaderLabelContext context) {
-        if (context.CODE() != null) pgenerator.header = ParserGenerator.makeCode(context.CODE());
+        if (context.JAVA_CODE() != null) pgenerator.header = ParserGenerator.makeCode(context.JAVA_CODE());
     }
 
     @Override
     public void enterMembersLabel(GrammarParser.MembersLabelContext context) {
-        if (context.CODE() != null) pgenerator.members = ParserGenerator.makeCode(context.CODE());
+        if (context.JAVA_CODE() != null) pgenerator.members = ParserGenerator.makeCode(context.JAVA_CODE());
     }
 
     @Override
@@ -29,10 +29,10 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
         String name = context.TERM_NAME().getText();
         Node curNode = pgenerator.getTerm(name);
 
-        for (GrammarParser.TerminalProductionContext terminalContext : context.terminalProduction()) {
+        for (GrammarParser.TerminalProdContext terminalContext : context.terminalProd()) {
             Element el = new Element();
             String s = "";
-            for (TerminalNode term : terminalContext.STRING()) {
+            for (TerminalNode term : terminalContext.SINGLE_QUOTE_STRING()) {
                 s += term.getText().substring(1);
                 s = s.substring(0, s.length() - 1);
             }
@@ -46,22 +46,22 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
         Node currentNode = pgenerator.getNonTerm(context.NON_TERM_NAME().getText());
 
         if (context.synthesized() != null) {
-            if (context.synthesized().NON_TERM_NAME() != null) {
-                currentNode.setReturnType(context.synthesized().NON_TERM_NAME().getText());
-            } else if (context.synthesized().TERM_NAME() != null) {
-                currentNode.setReturnType(context.synthesized().TERM_NAME().getText());
-            } else if (context.synthesized().MIXED_CASE() != null) {
-                currentNode.setReturnType(context.synthesized().MIXED_CASE().getText());
+            if (context.synthesized().result().NON_TERM_NAME() != null) {
+                currentNode.setReturnType(context.synthesized().result().NON_TERM_NAME().getText());
+            } else if (context.synthesized().result().TERM_NAME() != null) {
+                currentNode.setReturnType(context.synthesized().result().TERM_NAME().getText());
+            } else if (context.synthesized().result().JAVA_NAME() != null) {
+                currentNode.setReturnType(context.synthesized().result().JAVA_NAME().getText());
             }
         }
 
         if (context.inherited() != null) {
-            for (GrammarParser.ArgContext arg : context.inherited().arg()) {
-                currentNode.putDeclAttrs(arg.argName().getText(), arg.argType().getText());
+            for (GrammarParser.ArgumentContext arg : context.inherited().argument()) {
+                currentNode.putDeclAttrs(arg.arg_name().getText(), arg.arg_type().getText());
             }
         }
 
-        for (GrammarParser.NonterminalProductionContext nonterminalContext : context.nonterminalProduction()) {
+        for (GrammarParser.NonterminalProdContext nonterminalContext : context.nonterminalProd()) {
             Element el = new Element();
 
             if (nonterminalContext.nonterminalVariant().isEmpty()) {
@@ -81,8 +81,8 @@ public class MyGrammarBaseListener extends GrammarBaseListener {
                 el.add(part);
             }
 
-            if (nonterminalContext.CODE() != null) {
-                el.setJavaCode(ParserGenerator.makeCode(nonterminalContext.CODE()));
+            if (nonterminalContext.JAVA_CODE() != null) {
+                el.setJavaCode(ParserGenerator.makeCode(nonterminalContext.JAVA_CODE()));
             }
             currentNode.add(el);
         }

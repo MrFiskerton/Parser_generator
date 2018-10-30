@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mrfiskerton on 25.01.2018.
@@ -22,7 +23,7 @@ public class ParserGenerator {
     private static final String EOF = "EOF";
     private static final String EPS = "EPS";
 
-    String name, header, members;
+    String name, header = "", members = "";
     private final HashMap<String, Node> nonTerminals = new HashMap<>();
     private final HashMap<String, Node> terminals = new HashMap<>();
     private final HashMap<String, HashSet<String>> first = new HashMap<>();
@@ -149,24 +150,22 @@ public class ParserGenerator {
         boolean use_regex = false;
         StringBuilder regex_matching = new StringBuilder();
         regex_matching.append("\t\twhile (true) {\n")
-                      .append("\t\t\tcurString += (char) curChar;\n");
+                .append("\t\t\tcurString += (char) curChar;\n");
 
         boolean first = true;
         for (String curStringTerminal : terminals.keySet()) {
             for (Element elementString : terminals.get(curStringTerminal).getElementList()) {
-                //System.out.println(elementString.get(0).getName());
                 if (elementString.get(0).getName().length() > 1 &&
-                    elementString.get(0).getName().charAt(0) == '/' &&
-                    elementString.get(0).getName().charAt(elementString.get(0).getName().length() - 1) == '/') {
-                    //System.out.println(elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1));
+                        elementString.get(0).getName().charAt(0) == '/' &&
+                        elementString.get(0).getName().charAt(elementString.get(0).getName().length() - 1) == '/') {
                     use_regex = true;
                     regex_matching.append(String.format(
                             "\t\t\tif(curString.matches(\"%1$s\")) {\n" +
-                            "\t\t\t\tcurToken = Token.%2$s;\n" +
-                            "\t\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
-                            "\t\t\t\tnextChar();\n" +
-                            "\t\t\t\treturn;\n" +
-                            "\t\t\t}\n",
+                                    "\t\t\t\tcurToken = Token.%2$s;\n" +
+                                    "\t\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
+                                    "\t\t\t\tnextChar();\n" +
+                                    "\t\t\t\treturn;\n" +
+                                    "\t\t\t}\n",
                             elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1),
                             curStringTerminal.toUpperCase()));
                     continue;
@@ -196,22 +195,9 @@ public class ParserGenerator {
 
 
         if (use_regex) res.print(regex_matching.toString());
-        /*while (true) {
-            curString += (char) curChar;
-            if(curString.matches("(zapple)| ([A-Z]*)")) {
-                curToken = Token.CHAR;
-                System.out.println("\"" + curString + "\" matched by ");
-                nextChar();
-                return;
-            }
-            nextChar();
-            while (isBlank(curChar)) nextChar();
-            if (curChar == -1) {
-                throw new AssertionError("\"" + curString + "\" doesn't match regexp");
-            }
-        }*/
 
-        if (!use_regex) res.println("\t\tthrow new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos);");
+        if (!use_regex)
+            res.println("\t\tthrow new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos);");
         res.println("\t}\n}");
         res.close();
     }
@@ -289,8 +275,6 @@ public class ParserGenerator {
 
                         for (Node node : el.getNodes()) {
                             String name = node.getName();
-                            //System.out.println(nonTerm + ": " + name + " - " + suitableProds);
-
                             if (terminals.containsKey(node.getName())) {
                                 res.println("\t\t\t\tif (lex.curToken().toString().equals(\"" + name + "\")) {");
                                 res.println("\t\t\t\t\t" + name + ".add(lex.curString());");
@@ -316,20 +300,13 @@ public class ParserGenerator {
                     throw new AssertionError(String.format("Ambigous rule: %s %d", nonTerm, suitableProds));
                 } else {
                     if (getNonTerm(nonTerm).getReturnType().equals("String"))
-                        res.print(
-                                (ret ? "" : "\t\t\t\treturn \"\";\n") +
-                                        "\t\t\t}\n");
+                        res.print((ret ? "" : "\t\t\t\treturn \"\";\n") + "\t\t\t}\n");
                     else
-                        res.print(
-                                (ret ? "" : "\t\t\t\treturn;\n") +
-                                        "\t\t\t}\n");
+                        res.print((ret ? "" : "\t\t\t\treturn;\n") + "\t\t\t}\n");
                 }
             }
-
             res.print("\t\t\tdefault:\n" + "\t\t\t\tthrow new AssertionError(lex.curToken().toString());\n" + "\t\t}\n" + "\t}\n\n");
         }
-
-
         res.println("}\n");
         res.close();
     }
@@ -377,6 +354,8 @@ public class ParserGenerator {
             }
         }
     }
+
+
 
     private void computeFollow() {
         for (String name : nonTerminals.keySet()) {
@@ -453,9 +432,9 @@ public class ParserGenerator {
     }
 
     static List<String> refactorCallAttrs(GrammarParser.CallAttrsContext context) {
-        List<String> codes = new ArrayList<>();
-        for (TerminalNode code : context.CODE()) codes.add(makeCode(code));
-        return codes;
+//        List<String> codes = new ArrayList<>();
+//        for (TerminalNode code : context.JAVA_CODE()) codes.add(makeCode(code));
+        return context.JAVA_CODE().stream().map(ParserGenerator::makeCode).collect(Collectors.toList());
     }
 
     static String addPrefix(String prefix, String code) {

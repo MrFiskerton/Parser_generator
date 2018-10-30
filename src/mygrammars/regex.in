@@ -3,10 +3,6 @@ package mygenerated.regex;
 import generator.Tree;
 }
 
-@members {
-
-}
-
 start [returns  Tree]
     : re {return new Tree("Start", re.get(0));}
     | {return new Tree("Start");}
