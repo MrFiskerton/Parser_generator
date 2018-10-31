@@ -64,8 +64,8 @@ static void tabs(int amount) {for(int i=0; i<amount; i++) System.out.print(' ');
 start: includes main;
 includes: include includes | {};
 include
-    :   INCLUDE LS INCLUDE_IDENTIFIER print_include[{INCLUDE_IDENTIFIER.get(0)}] DOTH GR;
-print_include[String id]: {write("#include <" + id + ".h>\n");};
+    :   INCLUDE LS IDENTIFIER print_include[{IDENTIFIER.get(0)}] GR;
+print_include[String id]: {write("#include <" + id + ">\n");};
 
 main
     : INT MAIN LPAREN RPAREN print_main body | {};
@@ -108,9 +108,9 @@ type
     |   DOUBLE{write("double");}
     ;
 
-IDENTIFIER: '/V([a-zA-Z_]|[0-9])*/';
+IDENTIFIER: '/[a-z_A-Z]([a-zA-Z_]|[0-9])*/';
 INTCONST: '/[1-9][0-9]*/';
-INCLUDE_IDENTIFIER: '/[a-z_]([a-z_]|[0-9])*/';
+//INCLUDE_IDENTIFIER: '/[a-z_]([a-z_]|[0-9])*/';
 
 VOID: 'void';
 CHAR: 'char';

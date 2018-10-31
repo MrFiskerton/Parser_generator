@@ -302,8 +302,7 @@ public class obfuscateParser {
 			case INCLUDE: {
 				List<String> INCLUDE = new ArrayList<>();
 				List<String> LS = new ArrayList<>();
-				List<String> INCLUDE_IDENTIFIER = new ArrayList<>();
-				List<String> DOTH = new ArrayList<>();
+				List<String> IDENTIFIER = new ArrayList<>();
 				List<String> GR = new ArrayList<>();
 				if (lex.curToken().toString().equals("INCLUDE")) {
 					INCLUDE.add(lex.curString());
@@ -317,19 +316,13 @@ public class obfuscateParser {
 					throw new AssertionError("LS expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				if (lex.curToken().toString().equals("INCLUDE_IDENTIFIER")) {
-					INCLUDE_IDENTIFIER.add(lex.curString());
+				if (lex.curToken().toString().equals("IDENTIFIER")) {
+					IDENTIFIER.add(lex.curString());
 				} else {
-					throw new AssertionError("INCLUDE_IDENTIFIER expected, instead of " + lex.curToken().toString());
+					throw new AssertionError("IDENTIFIER expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				print_include(INCLUDE_IDENTIFIER.get(0));
-				if (lex.curToken().toString().equals("DOTH")) {
-					DOTH.add(lex.curString());
-				} else {
-					throw new AssertionError("DOTH expected, instead of " + lex.curToken().toString());
-				}
-				lex.nextToken();
+				print_include(IDENTIFIER.get(0));
 				if (lex.curToken().toString().equals("GR")) {
 					GR.add(lex.curString());
 				} else {
@@ -502,8 +495,8 @@ public class obfuscateParser {
 	private void print_include(String id) throws ParseException, IOException {
 		//System.out.println("print_include " + lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
-			case DOTH: {
-				write("#include <" + id + ".h>\n");
+			case GR: {
+				write("#include <" + id + ">\n");
 				break;
 			}
 			default:

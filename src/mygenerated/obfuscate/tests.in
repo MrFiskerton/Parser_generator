@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdio.h>
+#include <iostream>
+#include <vector>
 
 int main () {
-    double Va = 820;
-    double Vb = 3257;
-    double Vc = 180;
-    Vc = Va + Vb;
+    double my_super_variable = 820;
+    double varB = 3257;
+    double VARIABLE = 180;
+    VARIABLE = my_super_variable + varB;
 }

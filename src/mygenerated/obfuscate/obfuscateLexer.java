@@ -136,12 +136,9 @@ public class obfuscateLexer {
 		else if (curString.equals("+")) {
 			curToken = Token.PLUS;
 		}
-		else if(curString.matches("[a-z_]([a-z_]|[0-9])*")) {
-			curToken = Token.INCLUDE_IDENTIFIER;
-			//System.out.println("\"" + curString + "\" matched by " + "[a-z_]([a-z_]|[0-9])*");
-		}		else if(curString.matches("V([a-zA-Z_]|[0-9])*")) {
+		else if(curString.matches("[a-z_A-Z]([a-zA-Z_]|[0-9])*")) {
 			curToken = Token.IDENTIFIER;
-			//System.out.println("\"" + curString + "\" matched by " + "V([a-zA-Z_]|[0-9])*");
+			//System.out.println("\"" + curString + "\" matched by " + "[a-z_A-Z]([a-zA-Z_]|[0-9])*");
 		}		else if(curString.matches("[1-9][0-9]*")) {
 			curToken = Token.INTCONST;
 			//System.out.println("\"" + curString + "\" matched by " + "[1-9][0-9]*");
@@ -171,16 +168,13 @@ public class obfuscateLexer {
 		else if (("}").contains(str)) {
 			return true;
 		} 
-		else if(str.matches("[a-z_]([a-z_]|[0-9])*")) {
-			return true;
-		}
 		else if (("else").contains(str)) {
 			return true;
 		} 
 		else if (("main").contains(str)) {
 			return true;
 		} 
-		else if(str.matches("V([a-zA-Z_]|[0-9])*")) {
+		else if(str.matches("[a-z_A-Z]([a-zA-Z_]|[0-9])*")) {
 			return true;
 		}
 		else if (("double").contains(str)) {
