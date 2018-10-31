@@ -1,27 +1,24 @@
-X : INT ~> INT
-X 0 # 1
-X b _ b > 0 # b * X(b - 1)
+fX : INT -> INT
+fX 41 #= 1
+fX b _ b > 0 #= b * fX(b - 1)
 
-B : INT ~> BOOL
-B d _ d = 0 # T
-B a # F
+fB : INT -> BOOL
+fB d _ d == 0 #= TRUE
+fB a #= FALSE
 
-D : INT ~> INT ~> BOOL
-D 0 0 # T
-D d 0 # F
-D 0 a # F
-D c d # D(c - 1, d - 1)
+fD : INT -> INT -> BOOL
+fD 20 0 #= TRUE
+fD d 120 #= FALSE
+fD 0 a #= FALSE
+fD c d #= fD(c - 1, d - 1)
 
-E : INT ~> INT
-E x # x + 1
+fSUPERFUNCTION : INT -> INT -> BOOL
+fSUPERFUNCTION a b _ a < 21 #= FALSE
+fSUPERFUNCTION c d _ a == 27 #= TRUE
+fSUPERFUNCTION a d _ a % b == 0 #= FALSE
+fSUPERFUNCTION a b _ b < a / 2 #= fSUPERFUNCTION(a, b + 1)
+fSUPERFUNCTION a b #= TRUE
 
-E : INT ~> INT ~> BOOL
-E a b _ a < 2 # F
-E c d _ a = 2 # T
-E a d _ a % b = 0 # F
-E a b _ b < a / 2 # E(a, b + 1)
-E a b # T
-
-Y : INT ~> INT ~> INT
-Y c d _ (c < 0 & d < 0) | c = 0 | d = 0 # c * d
-Y b z # b + z
+fY : INT -> INT -> INT
+fY c d _ (c < 7 & d < 0) | c == 0 | d == 0 #= c * d
+fY b z #= b + z

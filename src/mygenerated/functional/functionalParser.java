@@ -22,7 +22,7 @@ public class functionalParser {
 	}
 
 	private String primitive() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case TRUE: {
 				List<String> bool = new ArrayList<>();
@@ -50,7 +50,7 @@ public class functionalParser {
 	}
 
 	private String bool() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case TRUE: {
 				List<String> TRUE = new ArrayList<>();
@@ -78,7 +78,7 @@ public class functionalParser {
 	}
 
 	private List values() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case TRUE: {
 				List<String> value = new ArrayList<>();
@@ -114,7 +114,7 @@ public class functionalParser {
 	}
 
 	private String type() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case BOOL: {
 				List<String> BOOL = new ArrayList<>();
@@ -161,7 +161,7 @@ public class functionalParser {
 	}
 
 	private String equationF() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> function = new ArrayList<>();
@@ -229,7 +229,7 @@ public class functionalParser {
 	}
 
 	private List typeDef() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case BOOL: {
 				List<String> type = new ArrayList<>();
@@ -258,7 +258,7 @@ public class functionalParser {
 	}
 
 	private void file() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				form();
@@ -271,7 +271,7 @@ public class functionalParser {
 	}
 
 	private String equationn() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case COMMA: {
 				List<String> COMMA = new ArrayList<>();
@@ -294,7 +294,7 @@ public class functionalParser {
 	}
 
 	private String function() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> FUNC = new ArrayList<>();
@@ -312,7 +312,7 @@ public class functionalParser {
 	}
 
 	private void defOrExpr(String function) throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case HASHTAG: {
 				expression(function);
@@ -348,7 +348,7 @@ public class functionalParser {
 	}
 
 	private void definition(String function) throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case QUADRODOT: {
 				List<String> QUADRODOT = new ArrayList<>();
@@ -368,7 +368,7 @@ public class functionalParser {
 	}
 
 	private List expressionLeft() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case TRUE: {
 				List<List> values = new ArrayList<>();
@@ -396,7 +396,7 @@ public class functionalParser {
 	}
 
 	private String equationTPrime() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case COMMA: {
 				return "";
@@ -450,7 +450,7 @@ public class functionalParser {
 	}
 
 	private String value() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case TRUE: {
 				List<String> primitive = new ArrayList<>();
@@ -478,7 +478,7 @@ public class functionalParser {
 	}
 
 	private List valuess() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case HASHTAG: {
 				return new ArrayList<>();
@@ -512,7 +512,7 @@ public class functionalParser {
 	}
 
 	private List expressionRight() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case HASHTAG: {
 				List<String> HASHTAG = new ArrayList<>();
@@ -552,7 +552,7 @@ public class functionalParser {
 	}
 
 	private void expression(String function) throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case HASHTAG: {
 				List<List> expressionRight = new ArrayList<>();
@@ -598,7 +598,7 @@ public class functionalParser {
 	}
 
 	private String equation() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> equationT = new ArrayList<>();
@@ -648,7 +648,7 @@ public class functionalParser {
 	}
 
 	private void start() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				file();
@@ -663,7 +663,7 @@ public class functionalParser {
 	}
 
 	private void ffile() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				file();
@@ -678,7 +678,7 @@ public class functionalParser {
 	}
 
 	private String condition() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case NOT: {
 				List<String> NOT = new ArrayList<>();
@@ -728,7 +728,7 @@ public class functionalParser {
 	}
 
 	private List typeDeff() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case ARROW: {
 				List<String> ARROW = new ArrayList<>();
@@ -757,7 +757,7 @@ public class functionalParser {
 	}
 
 	private void form() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> function = new ArrayList<>();
@@ -771,7 +771,7 @@ public class functionalParser {
 	}
 
 	private String equationEPrime() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case COMMA: {
 				return "";
@@ -808,7 +808,7 @@ public class functionalParser {
 	}
 
 	private String functionArgs() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> equation = new ArrayList<>();
@@ -861,7 +861,7 @@ public class functionalParser {
 	}
 
 	private String variable() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case IDENTIFIER: {
 				List<String> IDENTIFIER = new ArrayList<>();
@@ -879,7 +879,7 @@ public class functionalParser {
 	}
 
 	private String equationT() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case FUNC: {
 				List<String> equationF = new ArrayList<>();

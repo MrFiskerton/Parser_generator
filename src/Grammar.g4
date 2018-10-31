@@ -38,6 +38,7 @@ TERM_NAME : UPPERCASE_LETTER CHAR* ;
 
 JAVA_CODE : '{' (~[{}]+ JAVA_CODE?)* '}' ;
 SINGLE_QUOTE_STRING : '\'' (~'\'' | '\\\'')* '\'' ;
+//REG_EXP: '/' (~'/' )* '/';
 
 JAVA_NAME: LETTER CHAR*;
 

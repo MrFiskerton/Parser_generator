@@ -113,6 +113,7 @@ public class ParserGenerator {
         res.println("\tprivate int curPos;");
         res.println("\tprivate Token curToken;");
         res.println("\tprivate String curString;\n");
+        res.println("\tprivate final String strEOF = \"@eof\";");
 
         res.println("\tpublic " + LEXER + "(InputStream is) throws ParseException, IOException {");
         res.println("\t\tthis.is = is;");
@@ -131,19 +132,24 @@ public class ParserGenerator {
         res.println("\t\t}");
         res.println("\t}\n");
 
-        res.println("\tprivate String eat() throws IOException, ParseException {");
-        res.println("\tString result = \"\";");
-        res.println("\n");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
-        res.println("\t");
 
+        res.println("\tprivate String eat() throws IOException, ParseException {");
+        res.println("\t\tString result = \"\", tmp = \"\";");
+        res.println("\n");
+        res.println("\t\twhile (isBlank(curChar)) nextChar();");
+        res.println("\t\tif (curChar == -1) return strEOF;");
+        res.println("\t\twhile (!isBlank(curChar)) {");
+        res.println("\t\t\ttmp += (char) curChar;");
+        res.println("\t\t\tif (isValidString(tmp)) {");
+        res.println("\t\t\t\tresult += (char) curChar;");
+        res.println("\t\t\t} else break;");
+        res.println("\t\t\tnextChar();");
+        res.println("\t\t\t//System.out.println(\"[\" + result + \"]\");");
+        res.println("\t\t\tif (curChar == -1) return result;");
+        res.println("\t\t}");
+        res.println("\t\t//System.out.println(\"Result:= [\" + result + \"]\");");
+        res.println("\t\treturn result;");
+        res.println("\t");
         res.println("\t}\n");
 
         res.println("\tpublic Token curToken() {\n\t\treturn curToken;\n\t}\n");
@@ -152,68 +158,62 @@ public class ParserGenerator {
 
         res.println("\tpublic String curString() {\n\t\treturn curString;\n\t}\n");
 
+        ///--------------------------------------------------------------------------------------------
         res.println("\tpublic void nextToken() throws ParseException, IOException {");
         res.println("\t\tcurString = eat();");
 
-//        res.println("\t\twhile (isBlank(curChar)) nextChar();");
-//
-//        res.println("\t\tif (curChar == -1) {");
-//        res.println("\t\t\tcurToken = Token.EOF;");
-//        res.println("\t\t\treturn;");
-//        res.println("\t\t}");
+        StringBuilder valid_str_expr = new StringBuilder();
+        valid_str_expr.append("\t\tif ((strEOF).contains(str)) {\n")
+                      .append("\t\t\treturn true;\n\t\t}\n ");
 
-        boolean use_regex = false;
-        StringBuilder regex_matching = new StringBuilder();
-        regex_matching.append("\t\twhile (true) {\n")
-                .append("\t\t\tcurString += (char) curChar;\n");
+        res.print("\t\tif (curString.equals(strEOF)) {\n");
+        res.print("\t\t\tcurToken = Token.EOF;\n\t\t}\n ");
 
-        boolean first = true;
         for (String curStringTerminal : terminals.keySet()) {
             for (Element elementString : terminals.get(curStringTerminal).getElementList()) {
                 if (elementString.get(0).getName().length() > 1 &&
                         elementString.get(0).getName().charAt(0) == '/' &&
                         elementString.get(0).getName().charAt(elementString.get(0).getName().length() - 1) == '/') {
-                    use_regex = true;
-                    regex_matching.append(String.format(
-                            "\t\t\tif(curString.matches(\"%1$s\")) {\n" +
-                                    "\t\t\t\tcurToken = Token.%2$s;\n" +
-                                    "\t\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
-                                    "\t\t\t\tnextChar();\n" +
-                                    "\t\t\t\treturn;\n" +
-                                    "\t\t\t}\n",
+                    valid_str_expr.append(String.format(
+                            "\t\telse if(str.matches(\"%1$s\")) {\n" +
+                                    "\t\t\treturn true;\n" +
+                                    "\t\t}\n",
+                            elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1)));
+
+                    res.println(String.format(//TODO:
+                            "\t\telse if(curString.matches(\"%1$s\")) {\n" +
+                                    "\t\t\tcurToken = Token.%2$s;\n" +
+                                    "\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
+                                    "\t\t}",
                             elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1),
                             curStringTerminal.toUpperCase()));
-                    continue;
+                } else {
+                    res.println(String.format(
+                             "\t\telse if" +
+                                    " (curString.equals(\"%1$s\")) {\n" +
+                                    "\t\t\tcurToken = Token.%2$s;\n" +
+                                    "\t\t}",
+                            elementString.get(0).getName(), curStringTerminal.toUpperCase()
+                    ));
+                    valid_str_expr.append(String.format(
+                             "\t\telse if" +
+                                    " ((\"%1$s\").contains(str)) {\n" +
+                                    "\t\t\treturn true;\n" +
+                                    "\t\t} \n",
+                            elementString.get(0).getName()));
                 }
-
-                res.println(String.format(
-                        (first ? "\t\tif" : "\t\telse if") +
-                                " (\'%1$s\' == ((char) curChar)) {\n" +
-                                "\t\t\tcurToken = Token.%2$s;\n" +
-                                "\t\t\tcurString += (char) curChar;\n" +
-                                "\t\t\tnextChar();\n" +
-                                "\t\t\treturn;\n" +
-                                "\t\t}",
-                        elementString.get(0).getName(), curStringTerminal.toUpperCase()
-                ));
-                first = false;
             }
         }
+        res.println("\t\t else throw new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos + \"\\n CUR_STRING: \" + curString);");
+        res.println("\t}\n");
+        ///--------------------------------------------------------------------------------------------
 
-        regex_matching
-                .append("\n\t\t\tnextChar();\n")
-                .append("\t\t\twhile (isBlank(curChar)) nextChar();\n")
-                .append("\t\t\tif (curChar == -1) {\n")
-                .append("\t\t\t\tthrow new AssertionError(\"\\\"\" + curString + \"\\\" doesn't match regexp\");\n")
-                .append("\t\t\t}\n")
-                .append("\t\t}\n");
+        res.println("\tprivate boolean isValidString(String str) {");
+        res.println(valid_str_expr.toString());
+        res.println("\t\treturn false;");
+        res.println("\t}\n");
 
-
-        if (use_regex) res.print(regex_matching.toString());
-
-        if (!use_regex)
-            res.println("\t\tthrow new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos);");
-        res.println("\t}\n}");
+        res.println("}\n");
         res.close();
     }
 
@@ -253,7 +253,7 @@ public class ParserGenerator {
 
         for (String nonTerm : nonTerminals.keySet()) {
             res.println("\tprivate " + getNonTerm(nonTerm).getReturnType() + " " + nonTerm + "(" + getNonTerm(nonTerm).getDeclAttrs(true) + ") throws ParseException, IOException {");
-            res.println("\t\tSystem.out.println(lex.curToken().toString() + \" \" + lex.curString());");
+            res.println("\t\t//System.out.println(lex.curToken().toString() + \" \" + lex.curString());");
             res.println("\t\tswitch (lex.curToken()) {");
 
             Set<String> set = new HashSet<>(first.get(nonTerm));

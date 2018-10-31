@@ -15,6 +15,7 @@ public class functionalLexer {
 	private Token curToken;
 	private String curString;
 
+	private final String strEOF = "@eof";
 	public functionalLexer(InputStream is) throws ParseException, IOException {
 		this.is = is;
 		curPos = 0;
@@ -32,6 +33,26 @@ public class functionalLexer {
 		}
 	}
 
+	private String eat() throws IOException, ParseException {
+		String result = "", tmp = "";
+
+
+		while (isBlank(curChar)) nextChar();
+		if (curChar == -1) return strEOF;
+		while (!isBlank(curChar)) {
+			tmp += (char) curChar;
+			if (isValidString(tmp)) {
+				result += (char) curChar;
+			} else break;
+			nextChar();
+			//System.out.println("[" + result + "]");
+			if (curChar == -1) return result;
+		}
+		//System.out.println("Result:= [" + result + "]");
+		return result;
+	
+	}
+
 	public Token curToken() {
 		return curToken;
 	}
@@ -45,308 +66,173 @@ public class functionalLexer {
 	}
 
 	public void nextToken() throws ParseException, IOException {
-		curString = "";
-		while (isBlank(curChar)) nextChar();
-		if (curChar == -1) {
+		curString = eat();
+		if (curString.equals(strEOF)) {
 			curToken = Token.EOF;
-			return;
 		}
-		if (',' == ((char) curChar)) {
+ 		else if (curString.equals(",")) {
 			curToken = Token.COMMA;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('*' == ((char) curChar)) {
+		else if (curString.equals("*")) {
 			curToken = Token.OPS2;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('/' == ((char) curChar)) {
+		else if (curString.equals("/")) {
 			curToken = Token.OPS2;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('%' == ((char) curChar)) {
+		else if (curString.equals("%")) {
 			curToken = Token.OPS2;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('<' == ((char) curChar)) {
+		else if (curString.equals("<")) {
 			curToken = Token.OPS2;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('>' == ((char) curChar)) {
+		else if (curString.equals(">")) {
 			curToken = Token.OPS2;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('A' == ((char) curChar)) {
+		else if(curString.matches("f[A-Z]*")) {
 			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
+			//System.out.println("\"" + curString + "\" matched by " + "f[A-Z]*");
 		}
-		else if ('B' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('C' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('D' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('E' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('X' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('Y' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('Z' == ((char) curChar)) {
-			curToken = Token.FUNC;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('=' == ((char) curChar)) {
+		else if (curString.equals("==")) {
 			curToken = Token.EQUAL;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('(' == ((char) curChar)) {
+		else if (curString.equals("(")) {
 			curToken = Token.LPAREN;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('T' == ((char) curChar)) {
+		else if (curString.equals("TRUE")) {
 			curToken = Token.TRUE;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if (')' == ((char) curChar)) {
+		else if (curString.equals(")")) {
 			curToken = Token.RPAREN;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('0' == ((char) curChar)) {
+		else if (curString.equals("INT")) {
 			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('1' == ((char) curChar)) {
+		else if(curString.matches("[0-9]+")) {
 			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
+			//System.out.println("\"" + curString + "\" matched by " + "[0-9]+");
 		}
-		else if ('2' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('3' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('4' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('5' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('6' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('7' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('8' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('9' == ((char) curChar)) {
-			curToken = Token.INT;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('!' == ((char) curChar)) {
+		else if (curString.equals("!")) {
 			curToken = Token.NOT;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('+' == ((char) curChar)) {
+		else if (curString.equals("+")) {
 			curToken = Token.OPS;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('-' == ((char) curChar)) {
+		else if (curString.equals("-")) {
 			curToken = Token.OPS;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('|' == ((char) curChar)) {
+		else if (curString.equals("|")) {
 			curToken = Token.OPS;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('&' == ((char) curChar)) {
+		else if (curString.equals("&")) {
 			curToken = Token.OPS;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('_' == ((char) curChar)) {
+		else if (curString.equals("->")) {
+			curToken = Token.ARROW;
+		}
+		else if (curString.equals("_")) {
 			curToken = Token.BORDER;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('#' == ((char) curChar)) {
+		else if (curString.equals("#=")) {
 			curToken = Token.HASHTAG;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if (':' == ((char) curChar)) {
+		else if (curString.equals("BOOL")) {
+			curToken = Token.BOOL;
+		}
+		else if (curString.equals(":")) {
 			curToken = Token.QUADRODOT;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('F' == ((char) curChar)) {
+		else if (curString.equals("FALSE")) {
 			curToken = Token.FALSE;
-			curString += (char) curChar;
-			nextChar();
-			return;
 		}
-		else if ('a' == ((char) curChar)) {
+		else if(curString.matches("[a-z]+")) {
 			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
+			//System.out.println("\"" + curString + "\" matched by " + "[a-z]+");
 		}
-		else if ('b' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('c' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('d' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('e' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('x' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('y' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		else if ('z' == ((char) curChar)) {
-			curToken = Token.IDENTIFIER;
-			curString += (char) curChar;
-			nextChar();
-			return;
-		}
-		while (true) {
-			curString += (char) curChar;
-			if(curString.matches("INT")) {
-				curToken = Token.INT;
-				//System.out.println("\"" + curString + "\" matched by " + "INT");
-				nextChar();
-				return;
-			}
-			if(curString.matches("~>")) {
-				curToken = Token.ARROW;
-				//System.out.println("\"" + curString + "\" matched by " + "~>");
-				nextChar();
-				return;
-			}
-			if(curString.matches("BOOL")) {
-				curToken = Token.BOOL;
-				//System.out.println("\"" + curString + "\" matched by " + "BOOL");
-				nextChar();
-				return;
-			}
-
-			nextChar();
-			while (isBlank(curChar)) nextChar();
-			if (curChar == -1) {
-				throw new AssertionError("\"" + curString + "\" doesn't match regexp");
-			}
-		}
+		 else throw new AssertionError("Illegal character " + (char) curChar + " at position " + curPos + "\n CUR_STRING: " + curString);
 	}
+
+	private boolean isValidString(String str) {
+		if ((strEOF).contains(str)) {
+			return true;
+		}
+ 		else if ((",").contains(str)) {
+			return true;
+		} 
+		else if (("*").contains(str)) {
+			return true;
+		} 
+		else if (("/").contains(str)) {
+			return true;
+		} 
+		else if (("%").contains(str)) {
+			return true;
+		} 
+		else if (("<").contains(str)) {
+			return true;
+		} 
+		else if ((">").contains(str)) {
+			return true;
+		} 
+		else if(str.matches("f[A-Z]*")) {
+			return true;
+		}
+		else if (("==").contains(str)) {
+			return true;
+		} 
+		else if (("(").contains(str)) {
+			return true;
+		} 
+		else if (("TRUE").contains(str)) {
+			return true;
+		} 
+		else if ((")").contains(str)) {
+			return true;
+		} 
+		else if (("INT").contains(str)) {
+			return true;
+		} 
+		else if(str.matches("[0-9]+")) {
+			return true;
+		}
+		else if (("!").contains(str)) {
+			return true;
+		} 
+		else if (("+").contains(str)) {
+			return true;
+		} 
+		else if (("-").contains(str)) {
+			return true;
+		} 
+		else if (("|").contains(str)) {
+			return true;
+		} 
+		else if (("&").contains(str)) {
+			return true;
+		} 
+		else if (("->").contains(str)) {
+			return true;
+		} 
+		else if (("_").contains(str)) {
+			return true;
+		} 
+		else if (("#=").contains(str)) {
+			return true;
+		} 
+		else if (("BOOL").contains(str)) {
+			return true;
+		} 
+		else if ((":").contains(str)) {
+			return true;
+		} 
+		else if (("FALSE").contains(str)) {
+			return true;
+		} 
+		else if(str.matches("[a-z]+")) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
+

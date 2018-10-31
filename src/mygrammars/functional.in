@@ -317,10 +317,10 @@ bool [returns String]
 	| FALSE { return "false"; }
 	;
 
-TRUE: 'T';
-FALSE: 'F';
+TRUE: 'TRUE';
+FALSE: 'FALSE';
 
-EQUAL: '=';
+EQUAL: '==';
 
 OPS
 	: '+' | '-' | '|' | '&';
@@ -330,22 +330,19 @@ OPS2
 
 NOT: '!';
 
-INT: '/INT/';
-BOOL: '/BOOL/';
+INT: 'INT';
+BOOL: 'BOOL';
 
 QUADRODOT: ':';
-ARROW: '/~>/';
+ARROW: '->';
 COMMA: ',';
 LPAREN: '(';
 RPAREN: ')';
 BORDER: '_';
-HASHTAG: '#';
+HASHTAG: '#=';
 
-IDENTIFIER
-	: 'a' | 'b' | 'c' | 'd' | 'e' | 'x' | 'y' | 'z';
+IDENTIFIER: '/[a-z]+/';
 
-FUNC
-	: 'A' | 'B' | 'C' |	'D' | 'E' | 'X' | 'Y' | 'Z';
+FUNC: '/f[A-Z]*/';
 
-INT
-   : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' ;
+INT: '/[0-9]+/';
