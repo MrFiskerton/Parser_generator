@@ -1,5 +1,9 @@
 #include <stdio.h>
+#include <stdio.h>
 
-int main() {
-
+int main () {
+    double Va = 820;
+    double Vb = 3257;
+    double Vc = 180;
+    Vc = Va + Vb;
 }

@@ -165,6 +165,7 @@ public class ParserGenerator {
         StringBuilder valid_str_expr = new StringBuilder();
         valid_str_expr.append("\t\tif ((strEOF).contains(str)) {\n")
                 .append("\t\t\treturn true;\n\t\t}\n ");
+        StringBuilder tmp_accumulator = new StringBuilder();
 
         res.print("\t\tif (curString.equals(strEOF)) {\n");
         res.print("\t\t\tcurToken = Token.EOF;\n\t\t}\n ");
@@ -180,7 +181,7 @@ public class ParserGenerator {
                                     "\t\t}\n",
                             elementString.get(0).getName().substring(1, elementString.get(0).getName().length() - 1)));
 
-                    res.println(String.format(//TODO:
+                    tmp_accumulator.append(String.format(//TODO:
                             "\t\telse if(curString.matches(\"%1$s\")) {\n" +
                                     "\t\t\tcurToken = Token.%2$s;\n" +
                                     "\t\t\t//System.out.println(\"\\\"\" + curString + \"\\\" matched by \" + \"%1$s\");\n" +
@@ -204,6 +205,7 @@ public class ParserGenerator {
                 }
             }
         }
+        res.println(tmp_accumulator.toString());
         res.println("\t\t else throw new AssertionError(\"Illegal character \" + (char) curChar + \" at position \" + curPos + \"\\n CUR_STRING: \" + curString);");
         res.println("\t}\n");
         ///--------------------------------------------------------------------------------------------
@@ -253,7 +255,7 @@ public class ParserGenerator {
 
         for (String nonTerm : nonTerminals.keySet()) {
             res.println("\tprivate " + getNonTerm(nonTerm).getReturnType() + " " + nonTerm + "(" + getNonTerm(nonTerm).getDeclAttrs(true) + ") throws ParseException, IOException {");
-            res.println("\t\tSystem.out.println(lex.curToken().toString() + \" \" + lex.curString());");
+            res.println("\t\t//System.out.println(" + "\"" + nonTerm +" \" + " + "lex.curToken().toString() + \" \" + lex.curString());");
             res.println("\t\tswitch (lex.curToken()) {");
 
             Set<String> set = new HashSet<>(first.get(nonTerm));

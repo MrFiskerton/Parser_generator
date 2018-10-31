@@ -41,7 +41,7 @@ static String generateIDENTIFIER() {
     return last_result;
 }
 
-static void declareIDENTIFIER(String identifier) {
+static void declareIdentifier(String identifier) {
     String new_identifier;
     do {
         new_identifier = generateIDENTIFIER();
@@ -51,7 +51,7 @@ static void declareIDENTIFIER(String identifier) {
 
 static String obfuscate(String identifier) {
     if(!identifierMap.containsKey(identifier)) {
-        declareIDENTIFIER(identifier);
+        declareIdentifier(identifier);
     }
     return identifierMap.get(identifier);
 }
@@ -62,24 +62,55 @@ static void tabs(int amount) {for(int i=0; i<amount; i++) System.out.print(' ');
 //end members
 
 start: includes main;
-includes: include ;
+includes: include includes | {};
 include
-    :   INCLUDE LS IDENTIFIER print_include[{IDENTIFIER.get(0)}] DOTH GR;
+    :   INCLUDE LS INCLUDE_IDENTIFIER print_include[{INCLUDE_IDENTIFIER.get(0)}] DOTH GR;
 print_include[String id]: {write("#include <" + id + ".h>\n");};
 
 main
-    : INT MAIN LPAREN RPAREN body {write("\nint main () ");};
+    : INT MAIN LPAREN RPAREN print_main body | {};
+print_main: {write("\nint main () ");};
 
 body: lfparen items rfparen;
 lfparen: LFPAREN {write("{\n");};
 rfparen: RFPAREN {write("}\n");};
 
-items: {};
+print_tabs[int amount]: {tabs(amount);};
+print_newline: {write("\n");};
 
-print_tabs[int amount] : {tabs(amount);};
+items
+    : item print_newline items | {};
 
-IDENTIFIER: '/[a-zA-Z_]([a-zA-Z_]|[0-9])*/';
+item
+    : declaration | statement;
+
+declaration: type simple_declaration semicolon;
+id: IDENTIFIER {write(obfuscate(IDENTIFIER.get(0))); };
+
+statement: sum;
+sum: id assign id plus id semicolon;
+
+semicolon: SEMI {write(";");};
+assign: EQ {write(" = ");};
+intconst: INTCONST {write(INTCONST.get(0));};
+plus: PLUS {write(" + ");};
+
+simple_declaration: declare_id assign intconst;
+declare_id: IDENTIFIER obfuscate_id[{IDENTIFIER.get(0)}];
+obfuscate_id[String id]: {declareIdentifier(id); write(" " + obfuscate(id)); };
+
+type
+    :   VOID  {write("void");}
+    |   CHAR  {write("char");}
+    |   SHORT {write("short");}
+    |   INT   {write("int");}
+    |   FLOAT {write("float");}
+    |   DOUBLE{write("double");}
+    ;
+
+IDENTIFIER: '/V([a-zA-Z_]|[0-9])*/';
 INTCONST: '/[1-9][0-9]*/';
+INCLUDE_IDENTIFIER: '/[a-z_]([a-z_]|[0-9])*/';
 
 VOID: 'void';
 CHAR: 'char';
@@ -89,14 +120,19 @@ FLOAT: 'float';
 DOUBLE: 'double';
 MAIN: 'main';
 INCLUDE: '#include';
-
 DOTH: '.h';
+
 LS: '<';
 GR: '>';
+EQ: '=';
+
+PLUS: '+';
+
 LPAREN  : '(';
 RPAREN  : ')';
 LFPAREN: '{';
 RFPAREN: '}';
+
 DOT     : '.';
 SEMI    : ';';
 COMMA   : ',';
