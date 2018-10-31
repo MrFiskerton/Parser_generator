@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/regex" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/src/mygenerated/obfuscate" />
       <excludeFolder url="file://$MODULE_DIR$/src/mygenerated/obfuscator" />
     </content>
     <orderEntry type="inheritedJdk" />

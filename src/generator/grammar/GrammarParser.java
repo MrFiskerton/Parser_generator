@@ -19,7 +19,7 @@ public class GrammarParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, NON_TERM_NAME=12, TERM_NAME=13, JAVA_CODE=14, SINGLE_QUOTE_STRING=15, 
-		JAVA_NAME=16, WS=17, BLOCK_COMMENT=18, COMMENT=19;
+		DOUBLE_QUOTE_STRING=16, JAVA_NAME=17, WS=18, BLOCK_COMMENT=19, COMMENT=20;
 	public static final int
 		RULE_source_file = 0, RULE_header = 1, RULE_members = 2, RULE_grammar_rule = 3, 
 		RULE_nonterminal = 4, RULE_terminal = 5, RULE_inherited = 6, RULE_synthesized = 7, 
@@ -38,8 +38,8 @@ public class GrammarParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		"NON_TERM_NAME", "TERM_NAME", "JAVA_CODE", "SINGLE_QUOTE_STRING", "JAVA_NAME", 
-		"WS", "BLOCK_COMMENT", "COMMENT"
+		"NON_TERM_NAME", "TERM_NAME", "JAVA_CODE", "SINGLE_QUOTE_STRING", "DOUBLE_QUOTE_STRING", 
+		"JAVA_NAME", "WS", "BLOCK_COMMENT", "COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -1131,7 +1131,7 @@ public class GrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\25\u00a8\4\2\t\2"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26\u00a8\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\5\2"+
 		"$\n\2\3\2\5\2\'\n\2\3\2\6\2*\n\2\r\2\16\2+\3\2\3\2\3\3\3\3\3\3\3\4\3\4"+
@@ -1144,7 +1144,7 @@ public class GrammarParser extends Parser {
 		"\16\5\16\u008f\n\16\3\17\3\17\5\17\u0093\n\17\3\17\5\17\u0096\n\17\3\20"+
 		"\3\20\3\20\3\20\7\20\u009c\n\20\f\20\16\20\u009f\13\20\3\20\3\20\3\21"+
 		"\6\21\u00a4\n\21\r\21\16\21\u00a5\3\21\2\2\22\2\4\6\b\n\f\16\20\22\24"+
-		"\26\30\32\34\36 \2\3\4\2\16\17\22\22\2\u00ae\2#\3\2\2\2\4/\3\2\2\2\6\62"+
+		"\26\30\32\34\36 \2\3\4\2\16\17\23\23\2\u00ae\2#\3\2\2\2\4/\3\2\2\2\6\62"+
 		"\3\2\2\2\b\67\3\2\2\2\n9\3\2\2\2\fK\3\2\2\2\16W\3\2\2\2\20b\3\2\2\2\22"+
 		"f\3\2\2\2\24i\3\2\2\2\26k\3\2\2\2\30\u0085\3\2\2\2\32\u008a\3\2\2\2\34"+
 		"\u0095\3\2\2\2\36\u0097\3\2\2\2 \u00a3\3\2\2\2\"$\5\4\3\2#\"\3\2\2\2#"+
@@ -1163,7 +1163,7 @@ public class GrammarParser extends Parser {
 		"\3\2\2\2ij\t\2\2\2j\25\3\2\2\2kl\t\2\2\2l\27\3\2\2\2ms\7\16\2\2np\7\f"+
 		"\2\2oq\5\24\13\2po\3\2\2\2pq\3\2\2\2qr\3\2\2\2rt\7\r\2\2sn\3\2\2\2st\3"+
 		"\2\2\2t\u0086\3\2\2\2u{\7\17\2\2vx\7\f\2\2wy\5\24\13\2xw\3\2\2\2xy\3\2"+
-		"\2\2yz\3\2\2\2z|\7\r\2\2{v\3\2\2\2{|\3\2\2\2|\u0086\3\2\2\2}\u0083\7\22"+
+		"\2\2yz\3\2\2\2z|\7\r\2\2{v\3\2\2\2{|\3\2\2\2|\u0086\3\2\2\2}\u0083\7\23"+
 		"\2\2~\u0080\7\f\2\2\177\u0081\5\24\13\2\u0080\177\3\2\2\2\u0080\u0081"+
 		"\3\2\2\2\u0081\u0082\3\2\2\2\u0082\u0084\7\r\2\2\u0083~\3\2\2\2\u0083"+
 		"\u0084\3\2\2\2\u0084\u0086\3\2\2\2\u0085m\3\2\2\2\u0085u\3\2\2\2\u0085"+

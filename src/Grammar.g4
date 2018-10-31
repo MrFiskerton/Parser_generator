@@ -36,8 +36,11 @@ terminalProd: SINGLE_QUOTE_STRING+;
 NON_TERM_NAME : LOWERCASE_LETTER CHAR* ;
 TERM_NAME : UPPERCASE_LETTER CHAR* ;
 
-JAVA_CODE : '{' (~[{}]+ JAVA_CODE?)* '}' ;
+JAVA_CODE : '{' (~[{}]+| DOUBLE_QUOTE_STRING | JAVA_CODE)* '}' ;
 SINGLE_QUOTE_STRING : '\'' (~'\'' | '\\\'')* '\'' ;
+DOUBLE_QUOTE_STRING : '"' (~'"' | '\\"')* '"' ;
+
+//    '"' (~[\\"] | [\\] . )* '"'
 //REG_EXP: '/' (~'/' )* '/';
 
 JAVA_NAME: LETTER CHAR*;
