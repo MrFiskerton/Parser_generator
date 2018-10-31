@@ -104,7 +104,7 @@ for (Map.Entry<String, String> func : functions.entrySet()) {
 	}
 
 System.out.println(res);
-return;
+
 }
 	;
 
@@ -118,7 +118,7 @@ defOrExpr [String function]
 	;
 
 definition [String function]
-	: QUADRODOT typeDef { addFunction(function, typeDef.get(0)); return; }
+	: QUADRODOT typeDef { addFunction(function, typeDef.get(0)); }
 	;
 
 expression [String function]
@@ -134,7 +134,6 @@ if (conditions.size() == 1) {
 	addElement(function, values, conditions.get(1));
 }
 scope = new ArrayList<>();
-return;
 	}
 	| expressionRight
 	{
@@ -148,7 +147,6 @@ if (conditions.size() == 1) {
 	addElement(function, values, conditions.get(1));
 }
 scope = new ArrayList<>();
-return;
 	}
 	;
 

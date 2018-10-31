@@ -164,7 +164,7 @@ public class ParserGenerator {
 
         StringBuilder valid_str_expr = new StringBuilder();
         valid_str_expr.append("\t\tif ((strEOF).contains(str)) {\n")
-                      .append("\t\t\treturn true;\n\t\t}\n ");
+                .append("\t\t\treturn true;\n\t\t}\n ");
 
         res.print("\t\tif (curString.equals(strEOF)) {\n");
         res.print("\t\t\tcurToken = Token.EOF;\n\t\t}\n ");
@@ -189,14 +189,14 @@ public class ParserGenerator {
                             curStringTerminal.toUpperCase()));
                 } else {
                     res.println(String.format(
-                             "\t\telse if" +
+                            "\t\telse if" +
                                     " (curString.equals(\"%1$s\")) {\n" +
                                     "\t\t\tcurToken = Token.%2$s;\n" +
                                     "\t\t}",
                             elementString.get(0).getName(), curStringTerminal.toUpperCase()
                     ));
                     valid_str_expr.append(String.format(
-                             "\t\telse if" +
+                            "\t\telse if" +
                                     " ((\"%1$s\").contains(str)) {\n" +
                                     "\t\t\treturn true;\n" +
                                     "\t\t} \n",
@@ -253,7 +253,7 @@ public class ParserGenerator {
 
         for (String nonTerm : nonTerminals.keySet()) {
             res.println("\tprivate " + getNonTerm(nonTerm).getReturnType() + " " + nonTerm + "(" + getNonTerm(nonTerm).getDeclAttrs(true) + ") throws ParseException, IOException {");
-            res.println("\t\t//System.out.println(lex.curToken().toString() + \" \" + lex.curString());");
+            res.println("\t\tSystem.out.println(lex.curToken().toString() + \" \" + lex.curString());");
             res.println("\t\tswitch (lex.curToken()) {");
 
             Set<String> set = new HashSet<>(first.get(nonTerm));
@@ -315,9 +315,12 @@ public class ParserGenerator {
                     throw new AssertionError(String.format("Ambigous rule: %s %d", nonTerm, suitableProds));
                 } else {
                     if (getNonTerm(nonTerm).getReturnType().equals("String"))
-                        res.print((ret ? "" : "\t\t\t\treturn \"\";\n") + "\t\t\t}\n");
+                        res.print((ret ? "" : "\t\t\t\treturn \"\";\n"));
+                    else if (getNonTerm(nonTerm).getReturnType().equals("void"))
+                        res.print("\t\t\t\tbreak;\n");
                     else
-                        res.print((ret ? "" : "\t\t\t\treturn;\n") + "\t\t\t}\n");
+                        res.print((ret ? "" : "\t\t\t\treturn;\n"));
+                    res.print("\t\t\t}\n");
                 }
             }
             res.print("\t\t\tdefault:\n" + "\t\t\t\tthrow new AssertionError(lex.curToken().toString());\n" + "\t\t}\n" + "\t}\n\n");
@@ -369,7 +372,6 @@ public class ParserGenerator {
             }
         }
     }
-
 
 
     private void computeFollow() {

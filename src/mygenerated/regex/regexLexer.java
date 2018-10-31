@@ -44,7 +44,7 @@ public class regexLexer {
 			//System.out.println("[" + result + "]");
 			if (curChar == -1) return result;
 		}
-		System.out.println("Result:= [" + result + "]");
+		//System.out.println("Result:= [" + result + "]");
 		return result;
 	
 	}
