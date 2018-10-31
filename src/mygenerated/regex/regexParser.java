@@ -18,7 +18,7 @@ public class regexParser {
 	}
 
 	private Tree re_p() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OR: {
 				List<String> OR = new ArrayList<>();
@@ -46,7 +46,7 @@ public class regexParser {
 	}
 
 	private Tree kleene_p() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				return new Tree("kleene'");
@@ -84,7 +84,7 @@ public class regexParser {
 	}
 
 	private Tree re() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<Tree> concat = new ArrayList<>();
@@ -113,7 +113,7 @@ public class regexParser {
 	}
 
 	private Tree chars_p() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case CHAR: {
 				List<Tree> chars = new ArrayList<>();
@@ -129,7 +129,7 @@ public class regexParser {
 	}
 
 	private Tree start() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<Tree> re = new ArrayList<>();
@@ -155,7 +155,7 @@ public class regexParser {
 	}
 
 	private Tree concat() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<Tree> kleene = new ArrayList<>();
@@ -184,7 +184,7 @@ public class regexParser {
 	}
 
 	private Tree concat_p() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<Tree> kleene = new ArrayList<>();
@@ -222,7 +222,7 @@ public class regexParser {
 	}
 
 	private Tree n() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<String> OPEN_SQUARE = new ArrayList<>();
@@ -278,7 +278,7 @@ public class regexParser {
 	}
 
 	private Tree chars() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case CHAR: {
 				List<String> CHAR = new ArrayList<>();
@@ -298,7 +298,7 @@ public class regexParser {
 	}
 
 	private Tree kleene() throws ParseException, IOException {
-		System.out.println(lex.curToken().toString() + " " + lex.curString());
+		//System.out.println(lex.curToken().toString() + " " + lex.curString());
 		switch (lex.curToken()) {
 			case OPEN_SQUARE: {
 				List<Tree> n = new ArrayList<>();

@@ -52,4 +52,4 @@ CLOSE_BRACKET : ')' ;
 OPEN_SQUARE : '[' ;
 CLOSE_SQUARE : ']' ;
 ASTERISK: '*' | '+';
-CHAR : '/[a-z]/';
+CHAR : '/[a-z]+/';

@@ -131,6 +131,21 @@ public class ParserGenerator {
         res.println("\t\t}");
         res.println("\t}\n");
 
+        res.println("\tprivate String eat() throws IOException, ParseException {");
+        res.println("\tString result = \"\";");
+        res.println("\n");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+        res.println("\t");
+
+        res.println("\t}\n");
+
         res.println("\tpublic Token curToken() {\n\t\treturn curToken;\n\t}\n");
 
         res.println("\tpublic int curPos() {\n\t\treturn curPos;\n\t}\n");
@@ -138,14 +153,14 @@ public class ParserGenerator {
         res.println("\tpublic String curString() {\n\t\treturn curString;\n\t}\n");
 
         res.println("\tpublic void nextToken() throws ParseException, IOException {");
-        res.println("\t\tcurString = \"\";");
+        res.println("\t\tcurString = eat();");
 
-        res.println("\t\twhile (isBlank(curChar)) nextChar();");
-
-        res.println("\t\tif (curChar == -1) {");
-        res.println("\t\t\tcurToken = Token.EOF;");
-        res.println("\t\t\treturn;");
-        res.println("\t\t}");
+//        res.println("\t\twhile (isBlank(curChar)) nextChar();");
+//
+//        res.println("\t\tif (curChar == -1) {");
+//        res.println("\t\t\tcurToken = Token.EOF;");
+//        res.println("\t\t\treturn;");
+//        res.println("\t\t}");
 
         boolean use_regex = false;
         StringBuilder regex_matching = new StringBuilder();
@@ -407,7 +422,6 @@ public class ParserGenerator {
         }
     }
 
-
     Node getTerm(String name) {
         if (!terminals.containsKey(name)) {
             terminals.put(name, new Node(name));
@@ -424,7 +438,6 @@ public class ParserGenerator {
 
     public void generate(File grammar) throws IOException {
         prepare(grammar);
-
         generateTokens();
         generateMain();
         generateLexer();
